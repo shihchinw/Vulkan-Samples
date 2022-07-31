@@ -32,6 +32,7 @@ layout(set = 0, binding = 1) uniform GlobalUniform
 	mat4 view_proj;
 	vec3 camera_position;
 	vec3 light_position;
+	uint max_ao_each;
 }
 global_uniform;
 
@@ -42,7 +43,7 @@ Calculate ambient occlusion
 float calculate_ambient_occlusion(vec3 object_point, vec3 object_normal)
 {
 	const float ao_mult = 1;
-	uint max_ao_each = 3;
+	uint max_ao_each = global_uniform.max_ao_each;
 	uint max_ao = max_ao_each * max_ao_each;
 	const float max_dist = 2;
 	const float tmin = 0.01, tmax = max_dist;
@@ -112,7 +113,7 @@ bool intersects_light(vec3 light_origin, vec3 pos)
 void main(void)
 {
 	// this is where we apply the shadow
-	const float ao = calculate_ambient_occlusion(in_scene_pos.xyz, in_normal);
+	const float ao = global_uniform.max_ao_each == 0 ? 1.0 : calculate_ambient_occlusion(in_scene_pos.xyz, in_normal);
 	const vec4 lighting = intersects_light(global_uniform.light_position, in_scene_pos.xyz) ? vec4(0.2, 0.2, 0.2, 1) : vec4(1, 1, 1, 1);
 	o_color = lighting * vec4(ao * vec3(1, 1, 1), 1);
 }

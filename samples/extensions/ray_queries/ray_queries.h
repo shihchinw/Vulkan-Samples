@@ -43,6 +43,7 @@ class RayQueries : public ApiVulkanSample
 	~RayQueries() override;
 	void request_gpu_features(vkb::PhysicalDevice &gpu) override;
 	void render(float delta_time) override;
+	void on_update_ui_overlay(vkb::Drawer &drawer) override;
 	bool prepare(vkb::Platform &platform) override;
 
   private:
@@ -52,6 +53,7 @@ class RayQueries : public ApiVulkanSample
 		glm::mat4x4 proj;
 		alignas(16) glm::vec3 camera_position;
 		alignas(16) glm::vec3 light_position;
+		alignas(4) uint32_t max_ao_sample_each = 3;
 	} global_uniform;
 
 	struct Vertex

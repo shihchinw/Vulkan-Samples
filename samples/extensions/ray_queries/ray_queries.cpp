@@ -131,6 +131,19 @@ void RayQueries::render(float delta_time)
 	update_uniform_buffers();
 }
 
+void RayQueries::on_update_ui_overlay(vkb::Drawer &drawer)
+{
+	if (drawer.header("Settings"))
+	{
+		drawer.text("Shadow spp: 1");
+		int32_t max_ao_each = static_cast<int32_t>(global_uniform.max_ao_sample_each);
+		if (drawer.slider_int("Max AO spp in phi/theta", &max_ao_each, 0, 3))
+		{
+			global_uniform.max_ao_sample_each = static_cast<uint32_t>(max_ao_each);
+		}
+	}
+}
+
 void RayQueries::build_command_buffers()
 {
 	VkCommandBufferBeginInfo command_buffer_begin_info = vkb::initializers::command_buffer_begin_info();
